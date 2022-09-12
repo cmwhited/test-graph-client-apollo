@@ -1,0 +1,28 @@
+fragment SubgraphCard_subgraph on Subgraph {
+  id
+  entityVersion
+  displayName
+  description
+  image
+  createdAt
+  updatedAt
+  signalledTokens
+  currentSignalledTokens
+  active
+  currentVersion {
+    id
+    subgraphDeployment {
+      id
+      queryFeesAmount
+      stakedTokens
+    }
+  }
+  owner {
+    id
+    image
+    defaultName {
+      id
+      name
+    }
+  }
+}

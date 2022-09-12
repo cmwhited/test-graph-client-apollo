@@ -1,0 +1,13 @@
+sources:
+  - name: network
+    handler:
+      graphql:
+        strategy: fallback
+        sources:
+          - endpoint: https://gateway.thegraph.com/network
+            retry: 2
+            timeout: 5000
+          - endpoint: https://api.thegraph.com/subgraphs/name/graphprotocol/graph-network-mainnet
+
+documents:
+  - ./**/*.graphql

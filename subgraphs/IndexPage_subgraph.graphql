@@ -1,0 +1,53 @@
+query Subgraphs(
+  $orderBy: Subgraph_orderBy
+  $orderDirection: OrderDirection
+  $first: Int
+  $skip: Int
+) {
+  subgraphs(
+    orderBy: $orderBy
+    orderDirection: $orderDirection
+    first: $first
+    skip: $skip
+    where: { active: true, displayName_not: "", entityVersion: 2 }
+  ) {
+    ...SubgraphCard_subgraph
+  }
+}
+
+query SubgraphSearch(
+  $first: Int
+  $skip: Int
+  $searchText: String
+  $fullTextQuery: String!
+) {
+  # We do a full text search on .displayName and .description fields
+  # See https://github.com/graphprotocol/graph-network-subgraph/blob/dc32ca77d81c09f06e169973f514c56c28af08b2/schema.graphql#L1230-L1235
+  byText: subgraphSearch(text: $fullTextQuery, first: $first, skip: $skip) {
+    ...SubgraphCard_subgraph
+  }
+  # We search by owner ID
+  byOwnerId: subgraphs(
+    first: $first
+    where: {
+      active: true
+      entityVersion: 2
+      displayName_not: ""
+      owner_contains_nocase: $searchText
+    }
+  ) {
+    ...SubgraphCard_subgraph
+  }
+  # And search by owner display name
+  byOwnerName: subgraphs(
+    first: $first
+    where: {
+      active: true
+      entityVersion: 2
+      displayName_not: ""
+      owner_: { defaultDisplayName_contains_nocase: $searchText }
+    }
+  ) {
+    ...SubgraphCard_subgraph
+  }
+}
